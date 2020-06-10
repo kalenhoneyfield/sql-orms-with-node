@@ -1,8 +1,11 @@
-const Sequelize = require('sequelize');
+const db = require('./db');
+
+const {
+  Movie,
+  Person
+} = db.models;
 // const { say } = require('cowsay');
-
 // let log = console.log;
-
 // console.log = function(...arguments){
 //     let args = arguments.join(' ')
 //     let moo = {
@@ -14,29 +17,55 @@ const Sequelize = require('sequelize');
 //     log.apply(console, cowMoo);
 // }
 
-
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'movies.db',
-    logging: true
-  });
-
-class Movie extends Sequelize.Model {}
-Movie.init({
-    title: Sequelize.STRING
-}, { sequelize });
-
 // async IIFE
 (async () => {
-    await sequelize.authenticate()
-    await sequelize.sync({ force: true })
-    try {
-        const movie = await Movie.create({
-            title: 'Toy Story',
-          })
-          console.log(movie.toJSON())
-    } catch (error) {
-      console.error('Error connecting to the database: ', error)
+  await db.sequelize.authenticate();
+  await db.sequelize.sync({
+    force: true,
+  });
+  try {
+    await Movie.create({
+      title: 'Toy Story',
+      runtime: 81,
+      releaseDate: '1995-11-22',
+      isAvailableOnVHS: true,
+    });
+    await Movie.create({
+      title: 'The Incredibles',
+      runtime: 115,
+      releaseDate: '2004-04-14',
+      isAvailableOnVHS: true,
+    });
+    await Person.create({
+      firstName: 'Guy',
+      lastName: 'Guy',
+    });
+    Movie.findAll({
+      raw: true,
+    }).then((data) => {
+      console.log(data);
+    });
+    Person.findAll({
+      raw: true,
+    }).then((data) => {
+      console.log(data);
+    });
+    // const movieInstances = await Promise.all([
+    //   Movie.create({
+    //     title: 'Toy Story'
+    //   }),
+    //   Movie.create({
+    //     title: 'The Incredibles'
+    //   }),
+    // ]);
+    // const moviesJSON = movieInstances.map(movie => movie.toJSON());
+    // console.log(moviesJSON)
+  } catch (error) {
+    if (error.name === 'SequelizeValidationError') {
+      const errors = error.errors.map((err) => err.message);
+      console.error('Validation errors: ', errors);
+    } else {
+      throw error;
     }
-  })();
-
+  }
+})();
