@@ -1,0 +1,17 @@
+{
+  "name": "sql-orms-with-node",
+  "version": "0.1.0",
+  "description": "Using SQL ORMs with Node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "honeyfield",
+  "license": "ISC",
+  "dependencies": {
+    "cowsay": "^1.4.0",
+    "sequelize": "^5.21.12",
+    "sqlite3": "^4.2.0"
+  }
+}
