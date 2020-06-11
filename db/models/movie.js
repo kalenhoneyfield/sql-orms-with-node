@@ -52,6 +52,7 @@ module.exports = (sequelize) => {
       defaultValue: false,
     },
   }, {
+    paranoid: true,
     sequelize
   })
 

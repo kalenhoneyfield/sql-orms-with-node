@@ -1,4 +1,7 @@
 const db = require('./db');
+const {
+  Op
+} = db.Sequelize;
 
 const {
   Movie,
@@ -40,7 +43,26 @@ const {
       firstName: 'Guy',
       lastName: 'Guy',
     });
+    const movie3 = await Movie.build({
+      title: 'Toy Story 3',
+      runtime: 103,
+      releaseDate: '2010-06-18',
+      isAvailableOnVHS: false,
+    });
+    await movie3.save();
     Movie.findAll({
+      attributes: ['id', 'title'],
+      // where: {
+      //   releaseDate: {
+      //     [Op.gte]: '2004-01-01'
+      //   },
+      //   runtime: {
+      //     [Op.gt]: 95,
+      //   },
+      // },
+      order: [
+        ['id', 'ASC']
+      ],
       raw: true,
     }).then((data) => {
       console.log(data);
@@ -50,6 +72,21 @@ const {
     }).then((data) => {
       console.log(data);
     });
+
+    // const toyStory3 = await Movie.findByPk(3)
+    // // toyStory3.isAvailableOnVHS = true;
+    // // await toyStory3.save();
+    // await toyStory3.update({
+    //   isAvailableOnVHS: true,
+    // });
+
+    // console.log(toyStory3.get({
+    //   plain: true
+    // }))
+
+    const toyStory = await Movie.findByPk(1)
+    await toyStory.destroy()
+
     // const movieInstances = await Promise.all([
     //   Movie.create({
     //     title: 'Toy Story'
